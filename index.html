@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Speedflip Speed Calculator</title>
+<script>try{if(localStorage.getItem("theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
@@ -19,9 +20,25 @@
   --orange: #ff8c3a;
   --warn: #ffcf5c;
   --bad: #ff6b6b;
+  --article: #c3c9e2;
+  --on-blue: #08111f;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f6fc;
+  --panel: #ffffff;
+  --line: #d5dbef;
+  --text: #1b2038;
+  --muted: #5a6385;
+  --blue: #1f6fd1;
+  --orange: #d45a08;
+  --warn: #8a5f00;
+  --bad: #c62828;
+  --article: #343b5c;
+  --on-blue: #ffffff;
 }
 *, *::before, *::after { box-sizing: inherit; }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -62,7 +79,7 @@ h1 { font-size: 1.6rem; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.01
 }
 button {
   font: inherit; font-weight: 500; cursor: pointer;
-  background: var(--blue); color: #08111f; border: 0; border-radius: 8px; padding: 0 16px;
+  background: var(--blue); color: var(--on-blue); border: 0; border-radius: 8px; padding: 0 16px;
 }
 button:hover { filter: brightness(1.1); }
 :focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
@@ -85,12 +102,19 @@ summary { cursor: pointer; color: var(--muted); }
 details label { margin-top: 10px; }
 article { margin-top: 30px; }
 article h2 { font-size: 1.15rem; margin: 26px 0 6px; }
-article p, article li { color: #c3c9e2; }
+article p, article li { color: var(--article); }
 article ul { padding-left: 20px; }
 .formula {
   background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
   padding: 12px 16px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9rem; overflow-x: auto; white-space: pre;
 }
+footer { border-top: 1px solid var(--line); margin-top: 12px; padding: 22px 18px; font-size: 0.85rem; color: var(--muted); }
+.foot { max-width: 640px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; }
+.theme { display: flex; align-items: center; gap: 8px; }
+.dot { width: 20px; height: 20px; padding: 0; border-radius: 50%; border: 1px solid var(--muted); }
+.dot-dark { background: #171b2e; }
+.dot-light { background: #f4f6fc; }
+.dot[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--blue); }
 @media (max-width: 480px) { form { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -161,9 +185,24 @@ Speed = r · fps / K</div>
       <li>The framerate must stay steady. A fluctuating fps changes the angle.</li>
       <li>Angles below about 11.5° probably snap to a straight dodge, so a diagonal may not happen regardless of Speed.</li>
       <li>K is fitted from one measurement (2.85 at 480 fps gave roughly 30°) plus the quoted formula. To recalibrate, measure the angle you get from a known Speed, then set K = tan(angle) × fps ÷ Speed.</li>
+      <li>Since the amount of steps on each side is slightly different (128/127), you can't get the exact same angle on both sides.</li>
+    </ul>
+
+    <h3>Credit</h3>
+    <ul>
+    <li>Credit to u/ignice on Reddit, whose post was how I discovered this trick.</li>
     </ul>
   </article>
 </main>
+<footer>
+  <div class="foot">
+    <span class="theme">Theme
+      <button type="button" class="dot dot-dark" data-theme-btn="dark" title="Dark" aria-label="Dark theme"></button>
+      <button type="button" class="dot dot-light" data-theme-btn="light" title="Light" aria-label="Light theme"></button>
+    </span>
+    <span>No rights reserved — copy freely. 🗽</span>
+  </div>
+</footer>
 
 <script>
 (function () {
@@ -247,6 +286,21 @@ Speed = r · fps / K</div>
         document.body.removeChild(ta); done(ok);
       } catch (e) { done(false); }
     }
+  });
+
+  function applyTheme(t, save) {
+    document.documentElement.setAttribute("data-theme", t);
+    var b = document.querySelectorAll("[data-theme-btn]");
+    for (var i = 0; i < b.length; i++) {
+      b[i].setAttribute("aria-pressed", b[i].getAttribute("data-theme-btn") === t ? "true" : "false");
+    }
+    if (save) { try { localStorage.setItem("theme", t); } catch (e) {} }
+  }
+  var stored = null;
+  try { stored = localStorage.getItem("theme"); } catch (e) {}
+  applyTheme(stored === "light" ? "light" : "dark", false);
+  document.querySelectorAll("[data-theme-btn]").forEach(function (btn) {
+    btn.addEventListener("click", function () { applyTheme(btn.getAttribute("data-theme-btn"), true); });
   });
 
   calc();
