@@ -88,6 +88,9 @@ button:hover { filter: brightness(1.1); }
 .notes li { margin-top: 6px; padding-left: 12px; border-left: 2px solid var(--line); color: var(--muted); }
 .notes li.warn { border-color: var(--warn); color: var(--warn); }
 .notes li.bad { border-color: var(--bad); color: var(--bad); }
+.path { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
+.path small { font-size: 0.85rem; }
+#copypath { width: 103px; padding: 5px 12px; font-size: 0.85rem; flex-shrink: 0; white-space: nowrap; background: #ffd764; color: #1b1b1b; }
 form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px; }
 label { display: flex; flex-direction: column; gap: 5px; font-size: 0.92rem; color: var(--muted); }
 label small { color: var(--muted); opacity: 0.8; }
@@ -139,7 +142,10 @@ footer { border-top: 1px solid var(--line); margin-top: 12px; padding: 22px 18px
       <button type="button" id="copy">Copy line</button>
     </div>
     <ul class="notes" id="notes"></ul>
-      <small>Paste in: <b>Documents\My Games\Rocket League\TAGame\Config</b></small>
+    <div class="path">
+      <small>Paste in: <b id="path">Documents\My Games\Rocket League\TAGame\Config</b></small>
+      <button type="button" id="copypath">Copy path</button>
+    </div>
   </section>
 
   <form id="f" onsubmit="return false">
@@ -284,6 +290,26 @@ Speed = r · fps / K</div>
         document.body.removeChild(ta); done(ok);
       } catch (e) { done(false); }
     }
+  });
+
+  $("copypath").addEventListener("click", function () {
+    var btn = $("copypath");
+    var text = $("path").textContent;
+    function done(ok) {
+      btn.textContent = ok ? "Copied" : "Press Ctrl+C";
+      setTimeout(function () { btn.textContent = "Copy path"; }, 1500);
+    }
+    function fallback() {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta); done(ok);
+      } catch (e) { done(false); }
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
+    } catch (e) { fallback(); }
   });
 
   function applyTheme(t, save) {
