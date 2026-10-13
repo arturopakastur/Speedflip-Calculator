@@ -139,6 +139,7 @@ footer { border-top: 1px solid var(--line); margin-top: 12px; padding: 22px 18px
       <button type="button" id="copy">Copy line</button>
     </div>
     <ul class="notes" id="notes"></ul>
+      <small>Paste in: <b>Documents\My Games\Rocket League\TAGame\Config</b></small>
   </section>
 
   <form id="f" onsubmit="return false">
@@ -185,7 +186,7 @@ Speed = r · fps / K</div>
       <li>The framerate must stay steady. A fluctuating fps changes the angle.</li>
       <li>Angles below about 11.5° probably snap to a straight dodge, so a diagonal may not happen regardless of Speed.</li>
       <li>K is fitted from one measurement (2.85 at 480 fps gave roughly 30°) plus the quoted formula. To recalibrate, measure the angle you get from a known Speed, then set K = tan(angle) × fps ÷ Speed.</li>
-      <li>Since the amount of steps on each side is slightly different (128/127), you can't get the exact same angle on both sides.</li>
+      <li>Since the amount of steps on each side is slightly different (127/128), you can't get the exact same angle on both sides.</li>
     </ul>
 
     <h3>Credit</h3>
