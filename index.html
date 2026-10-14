@@ -110,6 +110,11 @@ article { margin-top: 30px; }
 article h2 { font-size: 1.15rem; margin: 26px 0 6px; }
 article p, article li { color: var(--article); }
 article ul { padding-left: 20px; }
+article ol { padding-left: 20px; }
+article li + li { margin-top: 6px; }
+article a { color: var(--blue); text-underline-offset: 3px; }
+article a:hover { filter: brightness(1.15); }
+.note { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--blue); border-radius: 8px; padding: 10px 14px; margin: 14px 0 0; }
 .formula {
   background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
   padding: 12px 16px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9rem; overflow-x: auto; white-space: pre;
@@ -194,6 +199,14 @@ Speed = r · fps / K</div>
       <li>K is fitted from one measurement (2.85 at 480 fps gave roughly 30°) plus the quoted formula. To recalibrate, measure the angle you get from a known Speed, then set K = tan(angle) × fps ÷ Speed.</li>
       <li>Since the amount of steps on each side is slightly different (127/128), you can't get the exact same angle on both sides.</li>
     </ul>
+
+    <h2>Is it allowed in-game?</h2>
+    <p>I'm confident it is, for two reasons:</p>
+    <ol>
+      <li><b>Precedent.</b> Controller players have long edited TAInput.ini to put several inputs on one button, known as the stall bind. A pro RLCS player asked a Rocket League developer whether it was allowed in RLCS, and <a href="https://www.reddit.com/r/RocketLeagueEsports/comments/kwqlay/stall_bindsmacros_are_allowed_in_rlcs_now/" target="_blank" rel="noopener noreferrer">Psyonix said it's fine</a>.</li>
+      <li><b>Secondary Jump.</b> Update 1.76 added a "Secondary Jump" bind, whose main use is putting jump on the scroll wheel for easy wall dashes. That is an advantage for keyboard and mouse players, so Psyonix is unlikely to mind the <code>Speed=</code> trick.</li>
+    </ol>
+    <p class="note">Easy Anti-Cheat doesn't react to changes in TAInput.ini in my experience. I've used this for a long time with no issues.</p>
 
     <h3>Credit</h3>
     <ul>
